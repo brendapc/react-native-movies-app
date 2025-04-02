@@ -24,7 +24,7 @@ const TabIcon = ({
     return (
       <ImageBackground
         source={images.highlight}
-        className="flex flex-row w-full flex-1 min-w-[112px] min-h-14 mt-4 justify-center items-center rounded-full overflow-hidden"
+        className="flex flex-row w-full flex-1 min-w-[100px] min-h-16 mt-4 justify-center items-center rounded-full overflow-hidden"
       >
         <Image source={icon} tintColor="#151312" className="size-5" />
         <Text className="text-secondary text-base font-semibold ml-2">
@@ -36,14 +36,35 @@ const TabIcon = ({
 
   return (
     <View className="size-full justify-center items-center rounded-full mt-4">
-      <Image source={icon} className="size-5" />
+      <Image source={icon} tintColor="#A8B5DB" className="size-5" />
     </View>
   );
 };
 
 const _Layout = () => {
   return (
-    <Tabs>
+    <Tabs
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarItemStyle: {
+          width: "100%",
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        tabBarStyle: {
+          backgroundColor: "#0f0d23",
+          borderRadius: 50,
+          marginHorizontal: 20,
+          marginBottom: 20,
+          height: 52,
+          position: "absolute",
+          overflow: "hidden",
+          borderWidth: 1,
+          borderColor: "#0f0d23",
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -56,27 +77,33 @@ const _Layout = () => {
       />
       <Tabs.Screen
         name="search"
-        options={{ headerShown: false, title: "Search",
+        options={{
+          headerShown: false,
+          title: "Search",
           tabBarIcon: ({ focused }) => (
             <TabIcon focused={focused} icon={icons.search} title="Search" />
           ),
-         }}
+        }}
       />
       <Tabs.Screen
         name="saved"
-        options={{ headerShown: false, title: "Saved", 
+        options={{
+          headerShown: false,
+          title: "Saved",
           tabBarIcon: ({ focused }) => (
             <TabIcon focused={focused} icon={icons.save} title="Saved" />
           ),
-         }}
+        }}
       />
       <Tabs.Screen
         name="profile"
-        options={{ headerShown: false, title: "Profile", 
+        options={{
+          headerShown: false,
+          title: "Profile",
           tabBarIcon: ({ focused }) => (
             <TabIcon focused={focused} icon={icons.person} title="Profile" />
           ),
-         }}
+        }}
       />
     </Tabs>
   );
