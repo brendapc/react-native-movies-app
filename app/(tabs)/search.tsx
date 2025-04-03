@@ -19,13 +19,12 @@ const Search = () => {
   } = useFetch(() => fetchMovies({ query: searchQuery }), false);
 
   useEffect(() => {
-    const timeout = setTimeout(
-      async () => {
-        if (searchQuery.trim()) {
-          await loadMovies();
-        } else {
-          reset();
-        }
+    const timeout = setTimeout(async () => {
+      if (searchQuery.trim()) {
+        await loadMovies();
+      } else {
+        reset();
+      }
     }, 500);
 
     return () => {
@@ -47,6 +46,17 @@ const Search = () => {
         keyExtractor={(item) => item.id.toString()}
         className="px-5"
         numColumns={3}
+        ListEmptyComponent={
+          !moviesLoading && !moviesError ? (
+            <View className="mt-10 px-5">
+              <Text className="text-gray-500 text-center">
+                {searchQuery.trim()
+                  ? "No movies found"
+                  : "Search for movies..."}
+              </Text>
+            </View>
+          ) : null
+        }
         columnWrapperStyle={{
           justifyContent: "center",
           gap: 16,
