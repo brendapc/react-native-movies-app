@@ -1,4 +1,4 @@
-import { Client, Databases, Query } from "react-native-appwrite";
+import { Client, Databases, ID, Query } from "react-native-appwrite";
 
 //exclamation marks tell typescript we are positive that this variable exists when he is not sure
 const DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!;
@@ -13,11 +13,34 @@ const database = new Databases(client);
 //check if a record of that search has already been stored
 //if a document is found increment the searchCount field
 //if no document is found create a new one with searchCount = 1
-export const updateSearchCount = async (query: string, movie?: Movie) => {
+export const updateSearchCount = async (query: string, movie: Movie) => {
+  try {
+    const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
+      Query.equal("searchTerm", query),
+    ]);
 
-  const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-    Query.equal('searchTerm', query)
-  ]);
+    if (result.documents.length > 0) {
+      const existingMovie = result.documents[0];
 
-  console.log(result)
+      await database.updateDocument(
+        DATABASE_ID,
+        COLLECTION_ID,
+        existingMovie.$id,
+        {
+          count: existingMovie.count + 1,
+        }
+      );
+    } else {
+      await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
+        searchTerm: query,
+        movie_id: movie.id,
+        count: 1,
+        title: movie.title,
+        poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+      });
+    }
+  } catch (error) {
+    console.error("Error updating search count:", error);
+    throw error;
+  }
 };
